@@ -8,6 +8,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class RequestInterceptor extends Interceptor {
   @override
   Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+    if (!options.path.startsWith('/app')) {
+      return super.onRequest(options, handler);
+    }
     final prefs = await SharedPreferences.getInstance();
     options.queryParameters['token'] = prefs.getString('token');
     super.onRequest(options, handler);

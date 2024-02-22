@@ -1,12 +1,16 @@
+import 'package:calendar_scheduler_mobile/app/domain/repositories/auth_repository.dart';
 import 'package:calendar_scheduler_mobile/app/infra/exceptions/auth_exception.dart';
 import 'package:dio/dio.dart';
+import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'constants.dart';
 
-class AuthRepository {
+@Injectable(as: AuthRepository)
+class AuthRepositoryImpl implements AuthRepository {
   final _dio = Dio(BaseOptions(baseUrl: apiUrl));
 
+  @override
   Future<void> login(String email, String password) async {
     try {
       final result = await _dio.get<Map<String, dynamic>>('/sign-in', queryParameters: {

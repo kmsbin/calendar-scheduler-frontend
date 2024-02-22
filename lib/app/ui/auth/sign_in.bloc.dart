@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
+import 'package:calendar_scheduler_mobile/app/domain/repositories/auth_repository.dart';
 import 'package:calendar_scheduler_mobile/app/infra/exceptions/auth_exception.dart';
-import 'package:calendar_scheduler_mobile/app/infra/repositories/auth_repository.dart';
+import 'package:calendar_scheduler_mobile/injector.dart';
 
 sealed class SignInEvent {}
 final class EmptySignInEvent extends SignInEvent {}
@@ -21,7 +22,7 @@ final class SuccessSignInState extends SignInState {}
 final class RequestSignInState extends SignInState {}
 
 class SignInBloc extends Bloc<SignInEvent, SignInState> {
-  final authRepository = AuthRepository();
+  final authRepository = getIt.get<AuthRepository>();
   SignInBloc() : super(EmptySignInState()) {
     on(registrarLogin);
   }

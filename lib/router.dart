@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app/ui/events/create_event/register_meeting.view.dart';
 import 'app/ui/events/resume/resume_meeting.view.dart';
+import 'app/ui/guest_scheduler/guest_scheduler.view.dart';
 
 final router = GoRouter(
   initialLocation: '/app/events',
@@ -29,11 +30,15 @@ final router = GoRouter(
         GoRoute(
           // name: 'create-event',
           path: 'create-event',
-          builder: (context, state) => RegisterMeetingView(),
+          builder: (context, state) => const RegisterMeetingView(),
         ),
       ],
       redirect: _redirectApp
     ),
+    GoRoute(
+      path: '/guest/:code',
+      builder: (context, state) => GuestEventView(state.pathParameters['code'].toString())
+    )
   ],
 );
 
