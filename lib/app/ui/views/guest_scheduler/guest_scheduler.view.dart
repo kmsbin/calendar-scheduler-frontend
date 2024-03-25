@@ -1,10 +1,11 @@
 import 'package:calendar_scheduler_mobile/app/domain/entities/empty_meeting_range.dart';
 import 'package:calendar_scheduler_mobile/app/ui/constants/constants.dart';
-import 'package:calendar_scheduler_mobile/app/ui/guest_scheduler/guest_scheduler.bloc.dart';
+import 'package:calendar_scheduler_mobile/app/ui/validators/validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'guest_scheduler.bloc.dart';
 import 'guest_scheduler.events.dart';
 
 class GuestEventView extends StatefulWidget {
@@ -102,6 +103,7 @@ class _GuestEventViewState extends State<GuestEventView> {
       );
     }
     if (state is GuestSchedulerSuccessCreateInvitationState) {
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Invitation created with success!'),
@@ -131,9 +133,11 @@ class _GuestEventViewState extends State<GuestEventView> {
               const Text('Enter an email address to send the Google Calendar invitation'),
               TextFormField(
                 controller: textController,
-                decoration: const InputDecoration(
-                    labelText: 'Email'
-                ),
+                decoration: const InputDecoration(labelText: 'Email'),
+                validator: Validator.compose([
+                  NotEmptyValidator(),
+                  EmailValidator(),
+                ]),
               )
             ],
           ),

@@ -2,9 +2,11 @@ import 'package:calendar_scheduler_mobile/app/domain/entities/meeting_range.dart
 import 'package:calendar_scheduler_mobile/app/ui/components/bottom_button.dart';
 import 'package:calendar_scheduler_mobile/app/ui/components/time_picker_field.component.dart';
 import 'package:calendar_scheduler_mobile/app/ui/constants/constants.dart';
-import 'package:calendar_scheduler_mobile/app/ui/events/create_event/register_meeting.bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'register_meeting.bloc.dart';
 
 class RegisterMeetingView extends StatefulWidget {
   const RegisterMeetingView({super.key});
@@ -37,12 +39,8 @@ class _RegisterMeetingViewState extends State<RegisterMeetingView> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<RegisterMeetingBloc, RegisterMeetingState>(
-        bloc: bloc,
-        listener: (context, state) {
-          if (state is SuccessMeetingState) {
-            Navigator.pop(context, true);
-          }
-        },
+      bloc: bloc,
+      listener: _stateListener,
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
@@ -136,6 +134,24 @@ class _RegisterMeetingViewState extends State<RegisterMeetingView> {
           ),
         ),
       );
+    }
+  }
+
+  void _stateListener(BuildContext context, RegisterMeetingState state) {
+    if (state is SuccessMeetingState) {
+      Navigator.pop(context, true);
+    }
+    if (state is ErrorMeetingState) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(state.message),
+          behavior: SnackBarBehavior.floating,
+        )
+      );
+    }
+    if (state is RedirectMeetingState) {
+      Navigator.pop(context, true);
+      launchUrl(Uri.parse(state.url));
     }
   }
 }

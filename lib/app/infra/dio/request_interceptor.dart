@@ -21,7 +21,7 @@ class RequestInterceptor extends Interceptor {
     if (err.response?.statusCode == HttpStatus.unauthorized) {
       GoRouter
         .of(router.routerDelegate.navigatorKey.currentContext!)
-        .go('/auth/signin');
+        .go('/auth/sign-in');
       return;
     }
     super.onError(err, handler);

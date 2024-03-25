@@ -5,8 +5,11 @@ import 'package:calendar_scheduler_mobile/app/domain/entities/meeting_range.dart
 import 'package:calendar_scheduler_mobile/app/domain/repositories/meeting_repository.dart';
 import 'package:calendar_scheduler_mobile/app/infra/exceptions/meeting_range_exception.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:intl/intl.dart';
+
+import '../exceptions/meeting.dart';
 
 @Injectable(as: MeetingRepository)
 class MeetingRepositoryImpl implements MeetingRepository {
@@ -15,23 +18,34 @@ class MeetingRepositoryImpl implements MeetingRepository {
   const MeetingRepositoryImpl(this.dio);
 
   @override
-  Future<void> registerMeetingRange(MeetingRange meetingRange) async {
+  Future<String> registerMeetingRange(MeetingRange meetingRange) async {
     try {
-      await dio.post(
+      final result = await dio.post<Map<String, dynamic>>(
         '/app/meeting-range',
         data: meetingRange.toJson(),
       );
+      if (result.data case {'url': final String url}) return url;
+
+      throw const MeetingException('Something got wrong');
     } catch (e) {
-      print(e);
+      throw const MeetingException('Something got wrong');
     }
   }
 
   @override
   Future<MeetingRange?> getMeeting() async {
-    final response = await dio.get<Map<String, dynamic>>('/app/meeting-range');
-    final data = response.data;
-    if (data == null) return null;
-    return MeetingRange.fromJson(data);
+    try {
+      final response = await dio.get<Map<String, dynamic>>('/app/meeting-range');
+      final data = response.data;
+      if (data == null) return null;
+      return MeetingRange.fromJson(data);
+    } on DioException catch(e) {
+      throw switch(e.response?.statusCode) {
+        404 => const MeetingNotFoundedException('Meeting not created'),
+        _ => 'Unknown error',
+      };
+    }
+
   }
 
   @override
@@ -59,8 +73,13 @@ class MeetingRepositoryImpl implements MeetingRepository {
         queryParameters: {'code': code},
         data: invitation.toJson(),
       );
-    } catch (e) {
-      print(e);
+    } on DioException catch (e) {
+      final errorMessage = switch(e.response?.statusCode) {
+        422 => 'Missing parameter in the body',
+        409 => e.response?.data['message'] as String? ?? 'Something wents wrong',
+        _ => 'Something wents wrong',
+      };
+      throw MeetingException(errorMessage);
     }
   }
 }

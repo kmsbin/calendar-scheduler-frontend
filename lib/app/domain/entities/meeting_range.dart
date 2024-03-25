@@ -8,6 +8,7 @@ class MeetingRange {
   final Duration duration;
   final TimeOfDay start;
   final TimeOfDay end;
+  final String code;
 
   const MeetingRange({
     this.id = 0,
@@ -15,15 +16,17 @@ class MeetingRange {
     required this.duration,
     required this.start,
     required this.end,
+    this.code = '',
   });
 
   factory MeetingRange.fromJson(Map<String, dynamic> data) {
     return MeetingRange(
       id: data['id'] as int? ?? 0,
       summary: data['summary'] as String,
-      duration: Duration(minutes: data['duration'] as int),
+      duration: Duration(minutes: (data['duration'] as num).toInt()),
       start: TimeOfDay.fromDateTime(DateTime.parse(data['start'] as String)),
       end: TimeOfDay.fromDateTime(DateTime.parse(data['end'] as String)),
+      code: data['code'] as String,
     );
   }
 

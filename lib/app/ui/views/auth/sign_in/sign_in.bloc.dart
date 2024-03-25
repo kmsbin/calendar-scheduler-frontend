@@ -2,24 +2,9 @@ import 'package:bloc/bloc.dart';
 import 'package:calendar_scheduler_mobile/app/domain/repositories/auth_repository.dart';
 import 'package:calendar_scheduler_mobile/app/infra/exceptions/auth_exception.dart';
 import 'package:calendar_scheduler_mobile/injector.dart';
+import 'sign_in.events.dart';
 
-sealed class SignInEvent {}
-final class EmptySignInEvent extends SignInEvent {}
-final class FailSignInEvent extends SignInEvent {}
-final class SuccessSignInEvent extends SignInEvent {}
-final class RequestSignInEvent extends SignInEvent {
-  final String email, password;
-  RequestSignInEvent(this.email, this.password);
-}
-
-sealed class SignInState {}
-final class EmptySignInState extends SignInState {}
-final class FailSignInState extends SignInState {
-  final String errorMessage;
-  FailSignInState(this.errorMessage);
-}
-final class SuccessSignInState extends SignInState {}
-final class RequestSignInState extends SignInState {}
+export 'sign_in.events.dart';
 
 class SignInBloc extends Bloc<SignInEvent, SignInState> {
   final authRepository = getIt.get<AuthRepository>();
@@ -32,8 +17,10 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       await authRepository.login(event.email, event.password);
       emit(SuccessSignInState());
     } on AuthException catch(e) {
+      print('login error $e');
       emit(FailSignInState(e.message));
     } catch (e) {
+      print('login error $e');
       emit(FailSignInState('Unknown error'));
     }
   }

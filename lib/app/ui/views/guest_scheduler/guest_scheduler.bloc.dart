@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:calendar_scheduler_mobile/app/domain/entities/empty_meeting_range.dart';
 import 'package:calendar_scheduler_mobile/app/domain/entities/event_invitation.dart';
 import 'package:calendar_scheduler_mobile/app/domain/repositories/meeting_repository.dart';
+import 'package:calendar_scheduler_mobile/app/infra/exceptions/meeting.dart';
 import 'package:calendar_scheduler_mobile/app/infra/exceptions/meeting_range_exception.dart';
 import 'package:calendar_scheduler_mobile/injector.dart';
 import 'package:flutter/foundation.dart';
@@ -30,7 +31,6 @@ class GuestSchedulerBloc extends Bloc<GuestSchedulerEvent, GuestSchedulerState> 
 
   Future<void> _sentGuestInvitation(GuestSchedulerRequestScheduleEvent event, Emitter<GuestSchedulerState> emit) async {
     try {
-      print('_sentGuestInvitation');
       await meetingRepository.sentEventInvitation(
         event.code, 
         EventInvitation(
@@ -40,6 +40,8 @@ class GuestSchedulerBloc extends Bloc<GuestSchedulerEvent, GuestSchedulerState> 
       );
       emit(GuestSchedulerSuccessCreateInvitationState());
       add(GuestSchedulerRequestMeetingsEvent(event.code, event.data.startDate));
+    } on MeetingException catch(e) {
+      emit(GuestSchedulerErrorState(e.message));
     } catch (_) {
       emit(GuestSchedulerErrorState('Something wents wrong'));
     }
