@@ -21,6 +21,14 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
   final _fieldKey = GlobalKey<FormFieldState>();
   bool _showPassword = false;
 
+  static const _snackBarDuration = Duration(seconds: 3);
+
+  @override
+  void dispose() {
+    passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,8 +100,6 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
       );
     }
   }
-
-  static const _snackBarDuration = Duration(seconds: 3);
 
   Future<void> _redirectToLogin() async {
     if (!mounted) return;

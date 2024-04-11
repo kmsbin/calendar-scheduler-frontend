@@ -31,10 +31,10 @@ class AuthRepositoryImpl implements AuthRepository {
     await prefs.setString('token', jsonMap['token']);
   }
 
-  String _errorFromStatusCode([int? statusCode]) {
+  static String _errorFromStatusCode([int? statusCode]) {
     return switch(statusCode) {
-      400 || 404 => 'Invalid credentials',
-      _ => 'Unknown error',
+      401 || 400 || 404 => 'Invalid credentials',
+      _ => 'Something got wrong!',
     };
   }
 
@@ -89,6 +89,22 @@ class AuthRepositoryImpl implements AuthRepository {
       throw AuthException(message);
     } catch(_) {
       throw const AuthException('Something got wrong!');
+    }
+  }
+
+  @override
+  Future<void> signOut(String token) async {
+    try {
+      await _dio.post(
+        '/sign-out',
+        queryParameters: {
+          'token': token,
+        }
+      );
+    } on DioException catch(e) {
+      throw AuthException(_errorFromStatusCode(e.response?.statusCode));
+    } catch(_) {
+      throw AuthException(_errorFromStatusCode());
     }
   }
 }

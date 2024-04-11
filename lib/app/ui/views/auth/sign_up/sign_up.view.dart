@@ -21,6 +21,14 @@ class _SignUpViewState extends State<SignUpView> {
   final bloc = SignUpBloc();
 
   @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -87,7 +95,7 @@ class _SignUpViewState extends State<SignUpView> {
 
   void _stateListener(BuildContext context, SignUpState state) {
     if (state is SuccessSignUpState) {
-      context.go('/app/events');
+      context.go('/events');
     }
     if (state is ErrorSignUpState) {
       ScaffoldMessenger.of(context).showSnackBar(

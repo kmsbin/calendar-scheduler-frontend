@@ -24,3 +24,9 @@ final class FailedResumeState extends ResumeState {
   final String message;
   const FailedResumeState(this.message);
 }
+final class FilledWithoutGoogleAccessResumeState extends ResumeState {
+  final MeetingRange range;
+  final String authUrl;
+
+  const FilledWithoutGoogleAccessResumeState(this.range, this.authUrl);
+}

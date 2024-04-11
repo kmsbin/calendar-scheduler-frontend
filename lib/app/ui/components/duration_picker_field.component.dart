@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class TimePickerFieldComponent extends StatefulWidget {
+class DurationPickerFieldComponent extends StatefulWidget {
   final void Function(TimeOfDay) onChanged;
   final TimeOfDay initialTime;
   final String labelText;
   final String? Function(TimeOfDay)? validator;
 
-  const TimePickerFieldComponent({
+  const DurationPickerFieldComponent({
     required this.onChanged,
     required this.labelText,
     this.initialTime = const TimeOfDay(hour: 0, minute: 0),
@@ -15,13 +15,13 @@ class TimePickerFieldComponent extends StatefulWidget {
   });
 
   @override
-  State<TimePickerFieldComponent> createState() => _TimePickerFieldComponentState();
+  State<DurationPickerFieldComponent> createState() => _DurationPickerFieldComponentState();
 }
 
-class _TimePickerFieldComponentState extends State<TimePickerFieldComponent> {
+class _DurationPickerFieldComponentState extends State<DurationPickerFieldComponent> {
   final textController = TextEditingController();
   late TimeOfDay _currentTime = widget.initialTime;
-  
+
   @override
   void initState() {
     super.initState();
@@ -59,6 +59,17 @@ class _TimePickerFieldComponentState extends State<TimePickerFieldComponent> {
     final result = await showTimePicker(
       context: context,
       initialTime: widget.initialTime,
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context),
+          child: MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              alwaysUse24HourFormat: true,
+            ),
+            child: child!,
+          ),
+        );
+      },
     );
     if (result != null) {
       setValue(result);

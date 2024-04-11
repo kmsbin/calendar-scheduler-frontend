@@ -23,9 +23,29 @@ class FilledResumeComponent extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              range.summary,
-              style: Theme.of(context).textTheme.titleLarge,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  range.summary,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                if (range.authUrl != null)
+                  Padding(
+                    padding: const EdgeInsets.only(right: kPadding),
+                    child: Container(
+                      width: 10,
+                      height: 10,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  )
+                else
+                  const SizedBox(),
+              ],
             ),
             const Divider(
               color: Colors.transparent,

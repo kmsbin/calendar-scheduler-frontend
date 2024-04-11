@@ -21,7 +21,7 @@ class MeetingRepositoryImpl implements MeetingRepository {
   Future<String> registerMeetingRange(MeetingRange meetingRange) async {
     try {
       final result = await dio.post<Map<String, dynamic>>(
-        '/app/meeting-range',
+        '/api/meeting-range',
         data: meetingRange.toJson(),
       );
       if (result.data case {'url': final String url}) return url;
@@ -35,7 +35,7 @@ class MeetingRepositoryImpl implements MeetingRepository {
   @override
   Future<MeetingRange?> getMeeting() async {
     try {
-      final response = await dio.get<Map<String, dynamic>>('/app/meeting-range');
+      final response = await dio.get<Map<String, dynamic>>('/api/meeting-range');
       final data = response.data;
       if (data == null) return null;
       return MeetingRange.fromJson(data);

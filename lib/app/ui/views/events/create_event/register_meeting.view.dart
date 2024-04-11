@@ -1,5 +1,6 @@
 import 'package:calendar_scheduler_mobile/app/domain/entities/meeting_range.dart';
 import 'package:calendar_scheduler_mobile/app/ui/components/bottom_button.dart';
+import 'package:calendar_scheduler_mobile/app/ui/components/duration_picker_field.component.dart';
 import 'package:calendar_scheduler_mobile/app/ui/components/time_picker_field.component.dart';
 import 'package:calendar_scheduler_mobile/app/ui/constants/constants.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,7 @@ class _RegisterMeetingViewState extends State<RegisterMeetingView> {
 
   @override
   void dispose() {
+    _summaryController.dispose();
     super.dispose();
     bloc.close();
   }
@@ -77,7 +79,7 @@ class _RegisterMeetingViewState extends State<RegisterMeetingView> {
                       ),
                     ],
                   ),
-                  TimePickerFieldComponent(
+                  DurationPickerFieldComponent(
                     labelText: 'Duration',
                     onChanged: (time) => duration = timeOfDayToDuration(time),
                   ),

@@ -154,7 +154,10 @@ class _GuestEventViewState extends State<GuestEventView> {
         );
       },
     );
-    return (textController.text, result ?? false);
+
+    final text = textController.text;
+    textController.dispose();
+    return (text, result ?? false);
   }
 
   Future<void> _sendInviteToScheduledSpace(EmptyMeetingRange item) async {

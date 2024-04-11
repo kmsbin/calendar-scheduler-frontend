@@ -12,7 +12,7 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<User> getUser() async {
     try {
-      final result = await dio.get<Map<String, dynamic>>('/app/user');
+      final result = await dio.get<Map<String, dynamic>>('/api/user');
       if (result.data case {'email': final String email, 'name': final String name}) {
         return User(
           name: name,

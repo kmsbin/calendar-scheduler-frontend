@@ -8,7 +8,7 @@ import 'app/ui/views/auth/send-reset-password-email/send_reset_password_email.vi
 import 'app/ui/views/views.dart';
 
 final router = GoRouter(
-  initialLocation: '/app/events',
+  initialLocation: '/events',
   routes: [
     GoRoute(
       path: '/auth',
@@ -33,7 +33,7 @@ final router = GoRouter(
       redirect: (_, __) async => null,
     ),
     GoRoute(
-      path: '/app',
+      path: '/',
       routes: [
         ShellRoute(
           routes: [
@@ -60,9 +60,9 @@ final router = GoRouter(
       redirect: _redirectApp
     ),
     GoRoute(
-      path: '/guest/:code',
-      builder: (_, state) => GuestEventView(state.pathParameters['code'].toString())
-    )
+        path: '/guest/:code',
+        builder: (_, state) => GuestEventView(state.pathParameters['code'].toString())
+    ),
   ],
 );
 

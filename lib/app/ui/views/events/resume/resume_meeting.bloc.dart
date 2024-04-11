@@ -14,19 +14,24 @@ class ResumeEventBloc extends Bloc<ResumeEvent, ResumeState> {
     on(_fetchData);
   }
 
-  Future<void> _fetchData(ResumeEvent event, Emitter<ResumeState> emit) async {
+  Future<void> _fetchData(GetResumeEvent event, Emitter<ResumeState> emit) async {
     try {
       emit(const LoadingResumeState());
       final meeting = await meetingRepository.getMeeting();
-      if (meeting != null) {
-        return emit(FilledResumeState(meeting));
+      if (meeting == null) {
+        return emit(const EmptyResumeState());
       }
-      emit(const EmptyResumeState());
+
+      final authUrl = meeting.authUrl;
+      if (authUrl != null && authUrl.isNotEmpty) {
+        return emit(FilledWithoutGoogleAccessResumeState(meeting, authUrl));
+      }
+      return emit(FilledResumeState(meeting));
     } on MeetingNotFoundedException {
       emit(const EmptyResumeState());
     } catch(e,s ) {
       debugPrint('Erro ao buscar $e, $s');
-      emit(const EmptyResumeState());
+      emit(FailedResumeState(e.toString()));
     }
   }
 }

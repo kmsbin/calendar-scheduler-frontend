@@ -8,7 +8,7 @@ class MeetingUsecase {
   
   String generateGuestUrl() {
     final buffer = StringBuffer(apiUrl)
-      ..write('/guest/')
+      ..write('/app/guest/register-meeting/')
       ..write(range.code);
     return buffer.toString();
   }

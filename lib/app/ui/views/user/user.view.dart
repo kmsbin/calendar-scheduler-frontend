@@ -4,6 +4,7 @@ import 'package:calendar_scheduler_mobile/app/ui/views/user/components/user_card
 import 'package:calendar_scheduler_mobile/app/ui/views/user/user.bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import 'user.events.dart';
 
@@ -72,7 +73,7 @@ class _UserViewState extends State<UserView> {
                             child: Divider(),
                           ),
                           ListTile(
-                            onTap: signOut,
+                            onTap: _signOut,
                             title: const Text('Sign out'),
                             trailing: const Icon(Icons.logout_rounded),
                           ),
@@ -93,8 +94,9 @@ class _UserViewState extends State<UserView> {
 
   }
 
-  Future<void> signOut() async {
-    await AuthUsecase().signOut();
-  }
+  Future<void> _signOut() async {
+    if (!await bloc.signOut() && !mounted) return;
 
+    context.go('/auth/sign-in');
+  }
 }

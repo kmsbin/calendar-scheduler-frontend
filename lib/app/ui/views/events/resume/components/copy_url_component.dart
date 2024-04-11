@@ -23,7 +23,10 @@ class _CopyUrlComponentState extends State<CopyUrlComponent> {
       child: StatefulBuilder(
         builder: (context, setState) {
           return GestureDetector(
-            onTap: () {
+            onTap: () async {
+              await Clipboard.setData(
+                ClipboardData(text: widget.url),
+              );
               if (!isCopied) { // prevents unnecessary rebuild
                 setState(() => isCopied = true);
               }
@@ -63,15 +66,6 @@ class _CopyUrlComponentState extends State<CopyUrlComponent> {
                           : 'Copy',
                       ),
                     ),
-                    // IconButton(
-                    //   visualDensity: VisualDensity.compact,
-                    //   onPressed: () {
-                    //     Clipboard.setData(
-                    //       ClipboardData(text: url),
-                    //     );
-                    //   },
-                    //   icon: const Icon(Icons.copy),
-                    // )
                   ],
                 ),
               ),

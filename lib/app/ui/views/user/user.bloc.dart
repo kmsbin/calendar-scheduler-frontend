@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:calendar_scheduler_mobile/app/domain/repositories/user_repository.dart';
+import 'package:calendar_scheduler_mobile/app/domain/usecases/auth_usecase.dart';
 import 'package:calendar_scheduler_mobile/app/infra/exceptions/user_exception.dart';
 import 'package:calendar_scheduler_mobile/app/ui/views/user/user.events.dart';
 import 'package:calendar_scheduler_mobile/injector.dart';
@@ -19,6 +20,15 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       emit(ErrorUserState(e.message));
     } catch(e) {
       emit(const ErrorUserState('Unknown error'));
+    }
+  }
+
+  Future<bool> signOut() async {
+    try {
+      await AuthUsecase(getIt.get()).signOut();
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 

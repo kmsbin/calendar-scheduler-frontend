@@ -9,6 +9,7 @@ class MeetingRange {
   final TimeOfDay start;
   final TimeOfDay end;
   final String code;
+  final String? authUrl;
 
   const MeetingRange({
     this.id = 0,
@@ -17,25 +18,30 @@ class MeetingRange {
     required this.start,
     required this.end,
     this.code = '',
+    this.authUrl,
   });
 
   factory MeetingRange.fromJson(Map<String, dynamic> data) {
+
     return MeetingRange(
       id: data['id'] as int? ?? 0,
       summary: data['summary'] as String,
-      duration: Duration(minutes: (data['duration'] as num).toInt()),
+      duration: DurationConverter.parseStringToDuration((data['duration'] as String)),
       start: TimeOfDay.fromDateTime(DateTime.parse(data['start'] as String)),
       end: TimeOfDay.fromDateTime(DateTime.parse(data['end'] as String)),
       code: data['code'] as String,
+      authUrl: data['auth_url'] as String?,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'summary': summary,
-      'duration': '${duration.inMinutes}s',
+      'duration': '${duration.inMinutes}m',
       'start': DurationConverter.timeOfDayToString(start),
       'end': DurationConverter.timeOfDayToString(end),
+      if (authUrl != null)
+        'auth_url': authUrl,
     };
   }
 

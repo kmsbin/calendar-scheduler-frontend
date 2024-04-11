@@ -21,6 +21,8 @@ class _SignInViewState extends State<SignInView> {
 
   @override
   void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
     super.dispose();
     signInBloc.close();
   }
@@ -121,7 +123,7 @@ class _SignInViewState extends State<SignInView> {
 
   void _stateListener(BuildContext context, SignInState state) {
     if (state is SuccessSignInState) {
-      GoRouter.of(context).go('/app/events');
+      GoRouter.of(context).go('/events');
     }
     if (state is FailSignInState) {
       ScaffoldMessenger.of(context).showSnackBar(
